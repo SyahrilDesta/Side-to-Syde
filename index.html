@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sydestore.com</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="src/app.js" async></script>
+</head>
+<body>
+    <nav class="navbar" x-data>
+        <img class="logo" src="./asset/Untitled_design__1_-removebg-preview (1).png" alt="Logo Syde Store">
+        <div class="navbar-nav">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#hamburger-menu">Menu</a>
+        <a href="#contact">Contact</a>
+        </div>
+
+        <div class="navbar-extra">
+            <a href="#" id="shopping-cart-button" style="color: white;">
+                <i class='bx bx-shopping-bag'></i>
+                <span class="quantity-badge" x-show="$store.cart.quantity" x-text="$store.cart.quantity"></span>
+            </a>
+            <a href="#" id="search-button" style="color: white;"><i class='bx bx-search-alt-2'></i></a>
+            <a href="#" id="menu" style="color: white;"><i class='bx bx-menu'></i></a>
+        </div>
+
+        <div class="search-form">
+            <input type="search" id="search-box" placeholder="search here...">
+            <label for="search-box"><i class='bx bx-search-alt-2'></i></label>
+        </div>
+
+        <div class="shopping-cart">
+            <template x-for="(item, index) in $store.cart.items" x-keys="index">
+            <div class="cart-item">
+                <img :src="`./img/${item.img}`" alt="produk1" :alt="item.name"> 
+                <div class="item-detail">
+                    <h3 x-text="item.name"></h3>
+                    <div class="item-price">
+                        <span x-text="rupiah(item.price)"></span> &times;
+                        <button id="remove" @click="$store.cart.remove(item.id)">&minus;</button>
+                        <span x-text="item.quantity"></span>
+                        <button id="add" @click="$store.cart.add(item)">&plus;</button> &equals;
+                        <span x-text="rupiah (item.total)"></span>
+                    </div>
+                </div>
+            </div>
+            </template>
+            <h4 x-show="!$store.cart.items.length" style="margin-top: 1rem;">Cart is Empty</h4>
+            <h4 x-show="$store.cart.items.length">Total : <span x-text="rupiah($store.cart.total)"></span></h4>
+            <div class="form-container" x-show="$store.cart.items.length">
+                <form action="" id="checkoutForm">
+                    <input type="hidden" name="items" x-model="JSON.stringify($store.cart.items)">
+                    <input type="hidden" name="total" x-model="$store.cart.total">
+                    <h5>Customer Detail</h5>
+                    <label for="name">
+                        <span>Name</span>
+                        <input type="text" name="name" id="name">
+                    </label>
+                    <label for="email">
+                        <span>Email</span>
+                        <input type="email" name="email" id="email">
+                    </label>
+                    <label for="phone">
+                        <span>Phone</span>
+                        <input type="number" name="phone" id="phone" autocomplete="off">
+                    </label>
+                    <button class="checkout-button disabled" type="submit" id="checkout-button" value="checkout">Checkout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <main class="content">
+            <h1>Everything Is Easy To Get</h1>
+            <p>Semua mudah di dapat dengan harga murah hanya untuk kamu pelanggan setia Syde Store.</p>
+            <a href="#hamburger-menu" class="cta">Beli Sekarang</a>
+        </main>
+    </section>
+
+    <section id="about" class="about">
+        <h2>Tentang <span>Kami</span></h2>
+
+        <div class="row">
+            <div class="about-img">
+                <img src="./img/SYDE STORE (1).png" alt="Tentang Kami">
+            </div>
+            <div class="content">
+                <h3>Kenapa Harus Belanja Disini?</h3>
+                <p>Syde Store merupakan platform e-commerce yang menyediakan produk berkualitas untuk para customer kami.</p>
+                <p>Kami mengutamakan kepuasan pelanggan dengan menyediakan produk yang berkualitas dan harga yang terjangkau untuk kalangan customer.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="hamburger-menu" class="menu" x-data="products">
+        <h2>Barang <span>Kami</span></h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit, quam consequuntur! Inventore quidem laborum vitae.</p>
+
+        <div class="row">
+            <template x-for="(item, index) in items" x-key="index">
+            <div class="menu-card">
+                <img :src="`./img/${item.img}`" :alt="item.name" class="menu-card-image">
+                <h3 class="menu-card-title" x-text="item.name"></h3>
+                <p class="menu-card-price" x-text="rupiah(item.price)"></p>
+                <div class="product-stars">
+                    <i class='bx bxs-star' ></i>
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                </div>
+                <div class="product-icon">
+                <a href="#" @click.prevent="$store.cart.add(item)"><i class='bx bx-cart-add' ></i></a>
+                <a href="#" class="item-detail-button"><i class='bx bx-chevron-down'></i></a>
+                </div>
+            </div>
+            </template>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Kontak <span>Kami</span></h2>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati nostrum, nam maiores pariatur dolores eos!, ipsum dolor sit amet consectetur adipisicing elit. Nulla, architecto?</p>
+
+        <div class="row">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126933.05761418918!2d106.56763058058972!3d-6.176510534097852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f8e853d2e38d%3A0x301576d14feb9c0!2sTangerang%2C%20Kota%20Tangerang%2C%20Banten!5e0!3m2!1sid!2sid!4v1710241866438!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="map"></iframe>
+
+            <form action="">
+                <div class="input-grup">
+                    <i class='bx bx-user-circle'></i>
+                    <input type="text" placeholder="Nama">
+                </div>
+                <div class="input-grup">
+                    <i class='bx bx-envelope' ></i>
+                    <input type="text" placeholder="Email">
+                </div>
+                <div class="input-grup">
+                    <i class='bx bx-phone'></i>
+                    <input type="text" placeholder="Phone">
+                </div>
+                <button type="submit" class="btn">Kirim Pesan</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social">
+            <a href="https://www.instagram.com/sydestore_id/"><i class='bx bxl-instagram-alt' ></i></a>
+            <a href="#"><i class='bx bxl-twitter' ></i></a>
+            <a href="#"><i class='bx bxl-facebook-square' ></i></a>
+        </div>
+
+        <div class="links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#hamburger-menu">Menu</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <div class="credit">
+            <p>Created by <a href="https://www.instagram.com/syahrilldesta/">syahrildesta</a> | &copy; 2024</p>
+        </div>
+    </footer>
+
+    <div class="modal" id="item-detail-modal">
+        <div class="modal-container">
+            <a href="#" class="close-icon"><i class='bx bx-x' ></i></a>
+            <div class="modal-content">
+                <img src="./menu/Case iphone 11.jpg" alt="case iphone 11">
+                <div class="product-content">
+                    <h3>case iphone 11</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim nam consequatur nobis voluptatibus magni architecto harum! Dolorum nesciunt voluptatem illum repudiandae illo rem optio maiores!</p>
+                    <div class="product-stars">
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bx-star'></i>
+                        <i class='bx bx-star'></i>
+                    </div>
+                    <p class="menu-card-price">IDR 50.000 <span>IDR 75.000</span></p>
+                <div class="product-icon">
+                <a href="#"><i class='bx bx-cart-add'></i><span>Add to cart</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+  
+</body>
+</html>
